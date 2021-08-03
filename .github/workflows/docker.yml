@@ -7,8 +7,8 @@ env:
 on:
   workflow_dispatch:
   push:
-    branches: main
-    tags: "*"
+    branches: [ main ]
+    tags: [ "*" ]
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
           ${{ runner.os }}-buildx-
     - name: Docker Buildx (build)
       run: |
-        echo buildx build \
+        docker buildx build \
           --cache-from "type=local,src=/tmp/.buildx-cache" \
           --cache-to "type=local,dest=/tmp/.buildx-cache" \
           --platform linux/amd64,linux/arm64 \
@@ -55,7 +55,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASS }}
     - name: Docker Buildx (push)
       run: |
-        echo buildx build \
+        docker buildx build \
           --cache-from "type=local,src=/tmp/.buildx-cache" \
           --platform linux/amd64,linux/arm64 \
           --output "type=image,push=true" \
@@ -63,4 +63,4 @@ jobs:
           .
     - name: Inspect image
       run: |
-        echo buildx imagetools inspect ${DOCKER_ORG}/${IMAGE_NAME}:${{ steps.get_version.outputs.VERSION }}
+        docker buildx imagetools inspect ${DOCKER_ORG}/${IMAGE_NAME}:${{ steps.get_version.outputs.VERSION }}
