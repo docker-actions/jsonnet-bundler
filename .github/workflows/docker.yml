@@ -5,6 +5,7 @@ env:
   IMAGE_NAME: ${{ github.event.repository.name }}
 
 on:
+  workflow_dispatch:
   push:
     branches: master
     tags: "*"
